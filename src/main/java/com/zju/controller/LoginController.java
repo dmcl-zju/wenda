@@ -117,7 +117,7 @@ public class LoginController {
 	
 	//给出登陆注册的主页面一个个跳转控制台
 	@RequestMapping({"/reglogin"})
-	public String loginreg(Model model,@RequestParam(value="",required=false) String next) {
+	public String loginreg(Model model,@RequestParam(value="next",required=false) String next) {
 		model.addAttribute("next", next);
 		return "login";
 	}

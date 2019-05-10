@@ -17,6 +17,7 @@ import com.zju.model.Question;
 import com.zju.model.ViewObject;
 import com.zju.service.QuestionService;
 import com.zju.service.UserService;
+import com.zju.service.impl.UserServiceImpl;
 
 
 /**
@@ -33,7 +34,7 @@ public class ServiceTest {
 	
 	//name指定要实现的实体类
 	@Resource(name="userServiceImpl")
-	UserService userServiceImpl;
+	UserServiceImpl userServiceImpl;
 	
 	@Resource(name="questionServiceImpl")
 	QuestionService questionServiceImpl;
