@@ -46,13 +46,13 @@ public class PassportInterceptor implements HandlerInterceptor {
 		if(null != ticket) {
 			Ticket loginTicket = ticketMapper.selByticket(ticket);
 			if(loginTicket==null || loginTicket.getStatus()!=0 || loginTicket.getExpired().before(new Date())) {
-				System.out.println("非登陆用户"+loginTicket);
+				//System.out.println("非登陆用户"+loginTicket);
 				return true;
 			}
 			//到这里说明是登陆用户
 			User user = userMapper.selById(loginTicket.getUserId());
 			hostHolder.set(user);
-			System.out.println(user.getName()+"登陆进来了");
+			//System.out.println(user.getName()+"登陆进来了");
 		}
 		return true;
 	}
@@ -65,7 +65,7 @@ public class PassportInterceptor implements HandlerInterceptor {
 			modelAndView.addObject("user", hostHolder.get());
 		}
 		
-		System.out.println("渲染前执行了");
+		//System.out.println("渲染前执行了");
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class PassportInterceptor implements HandlerInterceptor {
 			throws Exception {
 		// TODO Auto-generated method stub
 		hostHolder.clean();
-		System.out.println("最终返回执行了");
+		//System.out.println("最终返回执行了");
 	}
 
 }

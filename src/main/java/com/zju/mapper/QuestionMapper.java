@@ -18,8 +18,12 @@ public interface QuestionMapper {
 				") values(#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
 	int insQuestion(Question question);
 	
-	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,})
+	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME})
 	List<Question> selAll();
+	
+	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where id=#{id}"})
+	Question selByid(int id);
+	
 	//使用xml方式接口绑定方案----对于复杂sql语句的处理时考虑使用
 	List<Question> selLastestQuestions(@Param("userId") int userId,
 									   @Param("offset") int offset,
