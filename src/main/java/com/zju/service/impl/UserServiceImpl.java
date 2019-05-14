@@ -137,4 +137,10 @@ public class UserServiceImpl implements UserService{
 		return map;
 	}
 
+	@Override
+	public User getUserByName(String name) {
+		
+		return userMapper.selByName(name);
+	}
+
 }

@@ -20,10 +20,6 @@ public class QuestionServiceImpl implements QuestionService {
 	@Resource
 	SensitiveServiceImpl sensitiveServiceImpl;
 	
-	
-	
-	
-	
 	@Override
 	public List<Question> getLastestQuestions(int userId, int offset, int limit) {
 		// TODO Auto-generated method stub
@@ -46,6 +42,12 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public Question getQuestionDetail(int id) {
 		return questionMapper.selByid(id);
+	}
+
+	@Override
+	public int updateQuestionCount(int id,int commentCount) {
+		// TODO Auto-generated method stub
+		return questionMapper.updCommentCount(id, commentCount);
 	}
 
 }

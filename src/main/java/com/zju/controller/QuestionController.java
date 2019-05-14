@@ -1,6 +1,8 @@
 package com.zju.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -12,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zju.model.Comment;
+import com.zju.model.EntityType;
 import com.zju.model.HostHolder;
 import com.zju.model.Question;
+import com.zju.model.ViewObject;
+import com.zju.service.CommentService;
 import com.zju.service.QuestionService;
 import com.zju.service.UserService;
 import com.zju.utils.WendaUtil;
@@ -37,6 +43,9 @@ public class QuestionController {
 
 	@Resource
 	UserService userServiceImpl;
+	
+	@Resource 
+	CommentService commentServiceImpl;
 	
 	@RequestMapping(value="/question/add")
 	@ResponseBody
@@ -64,10 +73,21 @@ public class QuestionController {
 	
 	@RequestMapping(value="/question/{qid}")
 	public String questionDetail(Model model,@PathVariable("qid") int qid) {
+		
 		try {
+			//获取问题本身
 			Question q = questionServiceImpl.getQuestionDetail(qid);
 			model.addAttribute("question", q);
-			model.addAttribute("user", userServiceImpl.getUserById(q.getUserId()));
+			//获取问题的评论
+			List<Comment> comments = commentServiceImpl.getCommentByEntity(qid, EntityType.ENTITY_QUESTION);
+			List<ViewObject> vos = new ArrayList<>();
+			for(Comment comment:comments) {
+				ViewObject vo = new ViewObject();
+				vo.set("comment", comment);
+				vo.set("user", userServiceImpl.getUserById(comment.getUserId()));
+				vos.add(vo);
+			}
+			model.addAttribute("comments", vos);
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.info("获取信息错误"+e.getMessage());

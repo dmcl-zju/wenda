@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.zju.model.Question;
 
@@ -23,6 +24,10 @@ public interface QuestionMapper {
 	
 	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where id=#{id}"})
 	Question selByid(int id);
+	
+	@Update({"update",TABLE_NAME,"set comment_count=#{commentCount} where id=#{id}"})
+	int updCommentCount(@Param("id") int id,
+			   			@Param("commentCount") int commentCount);
 	
 	//使用xml方式接口绑定方案----对于复杂sql语句的处理时考虑使用
 	List<Question> selLastestQuestions(@Param("userId") int userId,
