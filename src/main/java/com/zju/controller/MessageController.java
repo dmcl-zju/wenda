@@ -46,9 +46,11 @@ Logger logger = Logger.getLogger(CommentController.class);
 			//先获取登陆的对象
 			int userId = 0;
 			User user = hostHolder.get();
-			if(null != user) {
-				userId = hostHolder.get().getId();
+			//如果没有登录就跳转到登陆页面
+			if(null==user) {
+				return "redirect:/reglogin"; 
 			}
+			userId = hostHolder.get().getId();
 			List<Message> conversationList = messageServiceImpl.getConversationList(userId, 0, 10);
 			List<ViewObject> conversations = new ArrayList<>();
 			for(Message message:conversationList) {
@@ -77,9 +79,9 @@ Logger logger = Logger.getLogger(CommentController.class);
 	@RequestMapping(value= {"/msg/detail"},method = {RequestMethod.GET})
 	public String conversationDetail(Model model,@RequestParam("conversationId") String conversationId) {
 		try {
-			List<Message> conversationList = messageServiceImpl.getConversationDetail(conversationId, 10, 0);
+			List<Message> conversation = messageServiceImpl.getConversationDetail(conversationId, 10, 0);
 			List<ViewObject> messages = new ArrayList<>();
-			for(Message message:conversationList) {
+			for(Message message:conversation) {
 				ViewObject vo = new ViewObject();
 				vo.set("message", message);
 				User user = userServiceImpl.getUserById(message.getFromId());

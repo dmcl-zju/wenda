@@ -20,6 +20,7 @@ import com.zju.model.HostHolder;
 import com.zju.model.Question;
 import com.zju.model.ViewObject;
 import com.zju.service.CommentService;
+import com.zju.service.LikeService;
 import com.zju.service.QuestionService;
 import com.zju.service.UserService;
 import com.zju.utils.WendaUtil;
@@ -46,6 +47,10 @@ public class QuestionController {
 	
 	@Resource 
 	CommentService commentServiceImpl;
+	
+	@Resource
+	LikeService likeServiceImpl;
+	
 	
 	@RequestMapping(value="/question/add")
 	@ResponseBody
@@ -83,6 +88,13 @@ public class QuestionController {
 			List<ViewObject> vos = new ArrayList<>();
 			for(Comment comment:comments) {
 				ViewObject vo = new ViewObject();
+				//增加赞和踩功能
+				if(hostHolder.get()==null) {
+					vo.set("liked", 0);
+				}else {
+					vo.set("liked", likeServiceImpl.getLikestatus(hostHolder.get().getId(), EntityType.ENTITY_COMMENT, comment.getId()));
+				}
+				vo.set("likeCount", likeServiceImpl.getLikecount(EntityType.ENTITY_COMMENT, comment.getId()));
 				vo.set("comment", comment);
 				vo.set("user", userServiceImpl.getUserById(comment.getUserId()));
 				vos.add(vo);

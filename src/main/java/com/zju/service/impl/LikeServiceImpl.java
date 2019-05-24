@@ -43,7 +43,7 @@ public class LikeServiceImpl implements LikeService{
 	public int getLikestatus(int userId, int entityType, int entityId) {
 		// TODO Auto-generated method stub
 		String likeKey = Rediskeyutil.getLikeKey(entityType, entityId);
-		String dislikeKey = Rediskeyutil.getLikeKey(entityType, entityId);
+		String dislikeKey = Rediskeyutil.getDislikeKey(entityType, entityId);
 		if(jedisAdapter.sismember(likeKey, String.valueOf(userId))) {
 			return 1;
 		}
