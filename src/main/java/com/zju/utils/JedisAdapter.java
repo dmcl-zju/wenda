@@ -2,6 +2,8 @@ package com.zju.utils;
 
 
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class JedisAdapter implements InitializingBean{
 			jedis.set(key, value);
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("redis异常："+e.getMessage());
+			logger.error("redis异常："+e.getMessage());
 		}finally {
 			if(null!=jedis) {
 				jedis.close();
@@ -45,7 +47,7 @@ public class JedisAdapter implements InitializingBean{
 			return jedis.get(key);
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("redis异常："+e.getMessage());
+			logger.error("redis异常："+e.getMessage());
 			return null;
 		}finally {
 			if(null!=jedis) {
@@ -62,7 +64,7 @@ public class JedisAdapter implements InitializingBean{
 			return jedis.sadd(key, value);
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("redis异常："+e.getMessage());
+			logger.error("redis异常："+e.getMessage());
 			return 0;
 		}finally {
 			if(null!=jedis) {
@@ -79,7 +81,7 @@ public class JedisAdapter implements InitializingBean{
 			return jedis.srem(key, value);
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("redis异常："+e.getMessage());
+			logger.error("redis异常："+e.getMessage());
 			return 0;
 		}finally {
 			if(null!=jedis) {
@@ -95,7 +97,7 @@ public class JedisAdapter implements InitializingBean{
 			return jedis.sismember(key,value);
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("redis异常："+e.getMessage());
+			logger.error("redis异常："+e.getMessage());
 			return false;
 		}finally {
 			if(null!=jedis) {
@@ -111,7 +113,7 @@ public class JedisAdapter implements InitializingBean{
 			return jedis.scard(key);
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("redis异常："+e.getMessage());
+			logger.error("redis异常："+e.getMessage());
 			return 0;
 		}finally {
 			if(null!=jedis) {
@@ -119,5 +121,39 @@ public class JedisAdapter implements InitializingBean{
 			}
 		}
 	}
+	
+	//list头部插入（左边）
+	public long lpush(String key,String value) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.lpush(key, value);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return 0;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	//list尾部阻塞弹出（右侧）
+	public List<String> brpop(int timeout,String key) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.brpop(timeout, key);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return null;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	
 
 }

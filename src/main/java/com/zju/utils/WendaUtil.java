@@ -13,6 +13,8 @@ public class WendaUtil {
 	private static final Logger logger = Logger.getLogger(WendaUtil.class);
 	//定义一些常用的常量
 	public static int ENTITY_QUESTION = 1;
+	public static int SYSTEM_USERID = 1;
+	
 	
 	
 	//用户下载图片

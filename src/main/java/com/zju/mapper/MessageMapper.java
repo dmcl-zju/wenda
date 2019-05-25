@@ -19,7 +19,7 @@ public interface MessageMapper {
 	@Insert({"insert into",TABLE_NAME,"(",INSERT_FIELDS,") values(#{fromId},#{toId},#{content},#{createdDate},#{hasRead},#{conversationId})"})
 	public int insMessage(Message message);
 	
-	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where conversation_id=#{conversationId} limit #{offset},#{limit}"})
+	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where conversation_id=#{conversationId} order by created_date desc limit #{offset},#{limit}"})
 	public List<Message> selByconversationId(@Param("conversationId") String conversationId,
 											 @Param("limit") int limit ,
 											 @Param("offset") int offset);

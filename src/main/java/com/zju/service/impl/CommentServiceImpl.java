@@ -49,11 +49,17 @@ public class CommentServiceImpl implements CommentService{
 		// TODO Auto-generated method stub
 		return commentMapper.updCommentStatus(entityId, entityType, 1);
 	}
-
+	
 	@Override
 	public int getCommentCount(int entityId, int entityType) {
 		// TODO Auto-generated method stub
 		return commentMapper.selCommentCount(entityId, entityType);
+	}
+
+	@Override
+	public Comment getCommentById(int commentId) {
+		// TODO Auto-generated method stub
+		return commentMapper.selById(commentId);
 	}
 
 }

@@ -7,6 +7,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.zju.async.EventModel;
+import com.zju.async.EventProducer;
+import com.zju.async.EventType;
 import com.zju.model.EntityType;
 import com.zju.service.LikeService;
 import com.zju.utils.JedisAdapter;
@@ -21,6 +24,9 @@ public class JedisTest {
 	
 	@Resource
 	LikeService likeServiceImpl;
+	
+	@Resource
+	EventProducer eventProducer;
 	
 	@Test
 	public void testJedis() {
@@ -39,9 +45,16 @@ public class JedisTest {
 		System.out.println(jedisAdapter.sismember(keyName, "3"));*/
 		
 		
-		System.out.println(likeServiceImpl.like(200, EntityType.ENTITY_COMMENT, 100));
-		
-		
+		//System.out.println(likeServiceImpl.like(200, EntityType.ENTITY_COMMENT, 100));
+		//jedisAdapter.set("test", "1");
+		/*
+		System.out.println(jedisAdapter.get("test"));
+		jedisAdapter.lpush("haha", "123");
+		jedisAdapter.lpush("haha", "456");
+		System.out.println(jedisAdapter.brpop(0, "haha"));
+		*/
+		EventModel model = new EventModel();
+		eventProducer.fireEvent(model);
 		
 	}
 }

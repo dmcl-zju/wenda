@@ -38,8 +38,7 @@ public class ServiceTest {
 	
 	@Resource(name="questionServiceImpl")
 	QuestionService questionServiceImpl;
-	
-	
+		
 	@Test
 	public void testService() {
 		List<ViewObject> vos = new ArrayList<>();

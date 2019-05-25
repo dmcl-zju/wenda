@@ -8,7 +8,9 @@ public interface CommentService {
 	
 	//增加评论
 	public int addComment(Comment comment);
-	//获取所有评论
+	//根据id获取评论对象
+	public Comment getCommentById(int commentId);
+	//获取某个问题的所有评论
 	public List<Comment> getCommentByEntity(int entityId,int entityType);
 	//获取某个用户的评论
 	public List<Comment> getCommentByUserId(int userId); 

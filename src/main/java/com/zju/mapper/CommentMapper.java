@@ -25,6 +25,9 @@ public interface CommentMapper {
 	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where user_id=#{userId}"})
 	public List<Comment> selByUserId(int userId);
 	
+	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME,"where id=#{commentId}"})
+	public Comment selById(int commentId);
+	
 	@Select({"select count(id) from", TABLE_NAME,"where entity_id=#{entityId} and entity_type=#{entityType}"})
 	public int selCommentCount(@Param("entityId") int entityId,
 							   @Param("entityType") int entityType);
