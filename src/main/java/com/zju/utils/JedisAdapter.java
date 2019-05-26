@@ -2,7 +2,10 @@ package com.zju.utils;
 
 
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 @Service
 public class JedisAdapter implements InitializingBean{
@@ -154,6 +158,124 @@ public class JedisAdapter implements InitializingBean{
 			}
 		}
 	}
+	
+	//redis的事务
+	public Jedis getJedis() {
+		return pool.getResource();
+	}
+	
+	
+	public Transaction multi(Jedis jedis) {
+		 try {
+	          return jedis.multi();
+         } catch (Exception e) {
+             logger.error("发生异常" + e.getMessage());
+         } finally {
+         }
+       return null;
+	}
+	
+	public List<Object> exec(Transaction tx, Jedis jedis) {
+        try {
+            return tx.exec();
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            tx.discard();
+        } finally {
+            if (tx != null) {
+                tx.close();
+            }
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+	
+	//有序set
+	public long zadd(String key,double score,String value) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zadd(key,score,value);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return 0;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	
+	//有序set
+	public long zrem(String key,String value) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zrem(key,value);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return 0;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	
+	//有序set
+	public Set<String> zrange(String key,long start,long end) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zrange(key,start,end);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return null;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	//有序set
+	public long zcard(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zcard(key);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return 0;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	//有序set
+	public Double zscore(String key,String value) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zscore(key,value);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return null;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	
+	
 	
 
 }

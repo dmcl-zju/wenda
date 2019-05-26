@@ -8,6 +8,9 @@ public class Rediskeyutil {
 	private static String DISLIKE = "DISLIKE";
 	private static String EVENTQUEUE = "EVENTQUEUE";
 	
+	private static String FOLLOWERKEY="FOLLOWERKEY";
+	private static String FOLLOWEEKEY="FOLLOWEEKEY";
+	
 
 	public static String getLikeKey(int entityType,int entityId) {
 		return LIKE+SPLIT+String.valueOf(entityType)+SPLIT+String.valueOf(entityId);
@@ -15,6 +18,14 @@ public class Rediskeyutil {
 	
 	public static String getDislikeKey(int entityType,int entityId) {
 		return DISLIKE+SPLIT+String.valueOf(entityType)+SPLIT+String.valueOf(entityId);
+	}
+	
+	public static String getFollowerKey(int entityType,int entityId) {
+		return FOLLOWERKEY+SPLIT+String.valueOf(entityType)+SPLIT+String.valueOf(entityId);
+	}
+	
+	public static String getFolloweeKey(int entityType,int entityId) {
+		return FOLLOWEEKEY+SPLIT+String.valueOf(entityType)+SPLIT+String.valueOf(entityId);
 	}
 	
 	public static String getEVentqueueKey() {

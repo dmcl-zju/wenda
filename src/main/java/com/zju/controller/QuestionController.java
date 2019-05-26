@@ -18,8 +18,10 @@ import com.zju.model.Comment;
 import com.zju.model.EntityType;
 import com.zju.model.HostHolder;
 import com.zju.model.Question;
+import com.zju.model.User;
 import com.zju.model.ViewObject;
 import com.zju.service.CommentService;
+import com.zju.service.FollowService;
 import com.zju.service.LikeService;
 import com.zju.service.QuestionService;
 import com.zju.service.UserService;
@@ -51,6 +53,8 @@ public class QuestionController {
 	@Resource
 	LikeService likeServiceImpl;
 	
+	@Resource
+	FollowService followServiceImpl;
 	
 	@RequestMapping(value="/question/add")
 	@ResponseBody
@@ -100,6 +104,28 @@ public class QuestionController {
 				vos.add(vo);
 			}
 			model.addAttribute("comments", vos);
+			
+			List<ViewObject> followUsers = new ArrayList<ViewObject>();
+	        // 获取关注的用户信息
+	        List<Integer> users = followServiceImpl.getFollowers(EntityType.ENTITY_QUESTION,qid, 0,10);
+	        for (Integer userId : users) {
+	            ViewObject vo = new ViewObject();
+	            User u = userServiceImpl.getUserById(userId);
+	            if (u == null) {
+	                continue;
+	            }
+	            vo.set("name", u.getName());
+	            vo.set("headUrl", u.getHeadUrl());
+	            vo.set("id", u.getId());
+	            followUsers.add(vo);
+	        }
+	        model.addAttribute("followUsers", followUsers);
+	        if (hostHolder.get() != null) {
+	            model.addAttribute("followed",followServiceImpl.isFollower(hostHolder.get().getId(), EntityType.ENTITY_QUESTION, qid));
+	        } else {
+	            model.addAttribute("followed", false);
+	        }
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.info("获取信息错误"+e.getMessage());

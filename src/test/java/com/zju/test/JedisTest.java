@@ -1,5 +1,8 @@
 package com.zju.test;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -7,12 +10,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.zju.async.EventModel;
 import com.zju.async.EventProducer;
-import com.zju.async.EventType;
-import com.zju.model.EntityType;
 import com.zju.service.LikeService;
 import com.zju.utils.JedisAdapter;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //告诉junit spring配置文件的位子
@@ -53,8 +56,29 @@ public class JedisTest {
 		jedisAdapter.lpush("haha", "456");
 		System.out.println(jedisAdapter.brpop(0, "haha"));
 		*/
-		EventModel model = new EventModel();
-		eventProducer.fireEvent(model);
+		/*EventModel model = new EventModel();
+		eventProducer.fireEvent(model);*/
+		
+		Jedis jedis = jedisAdapter.getJedis();
+		Transaction  tx = jedisAdapter.multi(jedis);
+		tx.zadd("hhhh", 20, "10");
+		tx.zadd("hhhh", 30, "12");
+		List<Object> list = jedisAdapter.exec(tx, jedis);
+		for(Object i:list) {
+			System.out.println(i);
+		}
+		System.out.println(jedisAdapter.zcard("hhhh"));
+		Set<String> set = jedisAdapter.zrange("hhhh", 0, -1);
+		for(String s:set) {
+			System.out.println(s);
+		}
+		jedisAdapter.zrem("hhhh", "10");
+		set = jedisAdapter.zrange("hhhh", 0, -1);
+		for(String s:set) {
+			System.out.println(s);
+		}
+		System.out.println(jedisAdapter.zcard("hhhh"));
+		
 		
 	}
 }

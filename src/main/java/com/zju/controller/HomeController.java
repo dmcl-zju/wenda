@@ -9,13 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestAttributes;
 
+import com.zju.model.EntityType;
+import com.zju.model.HostHolder;
 import com.zju.model.Question;
 import com.zju.model.User;
 import com.zju.model.ViewObject;
+import com.zju.service.FollowService;
 import com.zju.service.QuestionService;
 import com.zju.service.UserService;
 
@@ -31,6 +31,12 @@ public class HomeController {
 	@Resource(name="questionServiceImpl")
 	QuestionService questionServiceImpl;
 	
+	@Resource
+	FollowService followServiceImpl;
+	
+	@Resource
+	HostHolder hostHolder;
+	
 	private List<ViewObject> getQustions(int userId,int offset,int limit){
 		List<ViewObject> vos = new ArrayList<>();
 		List<Question> questions = questionServiceImpl.getLastestQuestions(userId,offset,limit);
@@ -38,9 +44,9 @@ public class HomeController {
 		for(Question q:questions) {
 			ViewObject vo = new ViewObject();
 			vo.set("question",q);
+			vo.set("followCount",followServiceImpl.getFollowerCount(EntityType.ENTITY_QUESTION,q.getId()));
 			vo.set("user", userServiceImpl.getUserById(q.getUserId()));
 			vos.add(vo);
-			//System.out.println("问题："+q);
 			//System.out.println("发布者："+userServiceImpl.getUserById(q.getUserId()));
 		}
 		return vos;
@@ -73,6 +79,19 @@ public class HomeController {
 	public String userIndex(Model model,@PathVariable("userId") int userId) {
 		List<ViewObject> vos = getQustions(userId, 0, 10);
 		model.addAttribute("vos", vos);
-		return "index";
+		
+		User user = userServiceImpl.getUserById(userId);
+        ViewObject vo = new ViewObject();
+        vo.set("user", user);
+        vo.set("commentCount", 0);
+        vo.set("followerCount", followServiceImpl.getFollowerCount(EntityType.ENTITY_USER,userId));
+        vo.set("followeeCount", followServiceImpl.getFolloweeCount(EntityType.ENTITY_USER, userId));
+        if (hostHolder.get() != null) {
+            vo.set("followed", followServiceImpl.isFollower(hostHolder.get().getId(),EntityType.ENTITY_USER,userId));
+        } else {
+            vo.set("followed", false);
+        }
+        model.addAttribute("profileUser", vo);
+        return "profile";
 	}
 }
