@@ -10,6 +10,7 @@ public class Rediskeyutil {
 	
 	private static String FOLLOWERKEY="FOLLOWERKEY";
 	private static String FOLLOWEEKEY="FOLLOWEEKEY";
+	private static String TIMELINEKEY="TIMELINEKEY";
 	
 
 	public static String getLikeKey(int entityType,int entityId) {
@@ -30,5 +31,9 @@ public class Rediskeyutil {
 	
 	public static String getEVentqueueKey() {
 		return EVENTQUEUE;
+	}
+	
+	public static String getTimelineKey(int userId) {
+		return TIMELINEKEY+SPLIT+String.valueOf(userId);
 	}
 }

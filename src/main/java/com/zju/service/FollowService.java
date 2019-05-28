@@ -9,7 +9,14 @@ import java.util.List;
  */
 public interface FollowService {
 	
-	//关注
+	
+	/**
+	 * 
+	 * @param userId 谁触发的关注操作---一般就是当前登录用户
+	 * @param entityType 要关注的实体对象类型
+	 * @param entityId 要关注的实体对象id
+	 * @return
+	 */
 	public boolean follow(int userId,int entityType,int entityId);
 	//取消关注
 	public boolean unfollow(int userId,int entityType,int entityId);

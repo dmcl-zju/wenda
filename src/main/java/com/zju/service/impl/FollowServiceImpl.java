@@ -22,7 +22,7 @@ public class FollowServiceImpl implements FollowService{
 	
 	@Resource
 	JedisAdapter jedisAdapter;
-
+	
 	@Override
 	public boolean follow(int userId, int entityType, int entityId) {
 		//谁关注了这个对象，存的是userId

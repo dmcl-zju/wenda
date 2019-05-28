@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.zju.async.EventModel;
+import com.zju.async.EventProducer;
+import com.zju.async.EventType;
 import com.zju.model.Comment;
 import com.zju.model.EntityType;
 import com.zju.model.HostHolder;
+import com.zju.model.Question;
 import com.zju.service.CommentService;
 import com.zju.service.QuestionService;
 
@@ -33,6 +37,10 @@ public class CommentController {
 	
 	@Resource
 	QuestionService questionServiceImpl;
+	
+	@Resource
+	EventProducer eventProduce;
+	
 	
 	
 	@RequestMapping(value = {"/addComment"}, method = {RequestMethod.POST})
@@ -55,6 +63,13 @@ public class CommentController {
 			comment.setStatus(0);
 			//业务层提交
 			commentServiceImpl.addComment(comment);
+			
+			//触发异步事件
+			EventModel eventModel = new EventModel();
+			Question question = questionServiceImpl.getQuestionDetail(questionId);
+			eventModel.setActorId(hostHolder.get().getId()).setEntityOwnerId(question.getUserId()).setEntityType(EntityType.ENTITY_QUESTION)
+						.setEntityId(questionId).setEventType(EventType.COMMENT);
+			eventProduce.fireEvent(eventModel);
 			
 			//更新评论的数量--之后考虑异步化更新
 			int commentCount = commentServiceImpl.getCommentCount(comment.getEntityId(), comment.getEntityType());
