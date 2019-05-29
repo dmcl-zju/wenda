@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zju.async.EventModel;
+import com.zju.async.EventProducer;
+import com.zju.async.EventType;
 import com.zju.model.Comment;
 import com.zju.model.EntityType;
 import com.zju.model.HostHolder;
@@ -56,6 +59,9 @@ public class QuestionController {
 	@Resource
 	FollowService followServiceImpl;
 	
+	@Resource
+	EventProducer eventProducer;
+	
 	@RequestMapping(value="/question/add")
 	@ResponseBody
 	public String addQuestion(@RequestParam("title") String title,
@@ -71,7 +77,15 @@ public class QuestionController {
 			q.setCommentCount(0);
 			q.setCreatedDate(new Date());
 			q.setUserId(hostHolder.get().getId());
-			questionServiceImpl.addQuestion(q);
+			int res = questionServiceImpl.addQuestion(q);
+			
+			if(res>0) {
+				//发布问题的时候同步到solr中
+				EventModel eventModel = new EventModel();
+				eventModel.setEventType(EventType.QUESTION).setEntityId(q.getId()).setExts("title",title).setExts("content", content);
+				eventProducer.fireEvent(eventModel);
+			}
+		
 			return WendaUtil.getJSONString(0);
 		} catch (Exception e) {
 			// TODO: handle exception

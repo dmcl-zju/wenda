@@ -149,6 +149,12 @@
 		    <version>1.3</version>
 		    <scope>test</scope>
 		</dependency>
+		<!-- 全文搜索solrj -->
+		<dependency>
+		    <groupId>org.apache.solr</groupId>
+		    <artifactId>solr-solrj</artifactId>
+		    <version>8.1.1</version>
+		</dependency>
   </dependencies>
    <build>
 		<resources>
@@ -175,6 +181,8 @@
 				<configuration>
 					<!-- 控制tomcat端口号 -->
 					<port>80</port>
+					<!-- 请求中文乱码 -->
+					<uriEncoding>UTF-8</uriEncoding>
 					<!-- 项目发布到tomcat后的名称 -->
 					<!-- / 相当于把项目发布名称为ROOT -->
 					<!-- /abc -->

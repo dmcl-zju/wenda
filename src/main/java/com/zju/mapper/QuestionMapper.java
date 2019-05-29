@@ -3,6 +3,7 @@ package com.zju.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -17,6 +18,7 @@ public interface QuestionMapper {
 	
 	@Insert({"insert into",TABLE_NAME,"(",INSERT_FIELDS,
 				") values(#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
+	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")/*增加这个注解插入记录后会返回自增长的id*/
 	int insQuestion(Question question);
 	
 	@Select({"select",SELECT_FIELDS,"from",TABLE_NAME})
