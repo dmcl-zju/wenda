@@ -19,7 +19,8 @@ import com.zju.model.Question;
 @Service
 public class SearchServiceImpl {
 	
-	private final String urlString = "http://localhost:8983/solr/mywenda";
+	//private final String urlString = "http://localhost:8983/solr/mywenda";
+	private final String urlString = "http://localhost/solr/";
 	private SolrClient solr = new HttpSolrClient.Builder(urlString).build();
 	
 	private static final String QUESTION_TITLE_FIELD = "question_title";

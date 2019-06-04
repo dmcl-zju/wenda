@@ -187,6 +187,15 @@
 					<!-- / 相当于把项目发布名称为ROOT -->
 					<!-- /abc -->
 					<path>/</path>
+					<!-- 以下为项目热部署发布时的内容 -->
+					<username>tomcat</username>
+					<password>tomcat</password>
+					<!-- 阿里云的配置 -->
+					<!-- /阿里云上的端口号被改成了80，因此省略端口号 -->
+					<url>http://47.103.128.253/manager/text</url>
+					<!-- 本地linux上的配置 -->
+					<!-- /linux上的端口号被改成了80，因此省略端口号 -->
+					<!-- <url>http://192.168.204.128/manager/text</url> -->
 				</configuration>
 			</plugin>
 		</plugins>
